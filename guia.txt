@@ -1,0 +1,4 @@
+Crear app:
+npx create-react-app mi-app
+Star App:
+npm start
