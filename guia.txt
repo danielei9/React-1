@@ -124,3 +124,27 @@ Manejar logica de un boton mediante onclick
         > 
             {props.children}
         </div>
+
+        Fragmentos para no poner un contenedor que no tiene proposito se pueden usar etiquetas en blanco como...
+        function ListaDeTareas(){
+            return(
+                <>
+
+                </>
+            )
+        }
+    A la hora de representar en una lista es necesario indicar con key el orden y que este valor sea unico. este valor no es pasado como props
+    si lo quieres como prop hay que pasarlo duplicado con otro nombre id en este caso ... key es totalmente necesario
+
+     <div className="tareas-lista-contenedor">
+        {
+            tareas.map((tarea)=>
+                <Tarea
+                key={tarea.id}
+                id={tarea.id}
+                texto={tarea.texto}
+                completada={tarea.completada}
+                />
+            )
+        }
+            </div>
