@@ -148,3 +148,52 @@ Manejar logica de un boton mediante onclick
             )
         }
             </div>
+
+    Loc componentes de clase en el constructor llaman a super si tiene props tambien los recibe constructor(props) y super(props)
+    
+    class Tarea extends React.Component{
+        constructor(props){
+            super(props);
+        }
+        render(){
+            return <p>Mi Tarea  </p>;
+        }
+    }
+
+    el estado en el constructor : el objeto state se inicializa en el constructor para manejar los estaddos en el objeto js state
+
+    class Tarea extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                completada:true,
+                color:red,
+                prioridad:1
+        }
+        render(){
+            return <p>Mi Tarea  </p>;
+        }
+    }
+
+    Acceder al estado mediante this.state.NombrePropiedad
+
+     this.state = {
+                completada:true,         // this.state.completada ... Para acceder a ellas
+                color:red,               // this.state.color
+                prioridad:1              // this.state.prioridad
+        }
+        por ejemplo:
+
+         render(){
+            return <p>Mi Tarea es de color {this.state.color}  </p>;
+        }
+
+        Actualizar el estado mediante this.setState({ SOLO PROPIEDADES A CAMBIAR LAS OTRAS NO SE VEN AFECTADAS}) 
+
+        this.setState({
+            completada:false,
+            color:"green"  //  prioridad no cambiar => ( prioridad:1 )
+        });
+
+        Metodos de ciclos de vida son metodos especiales de React usados para realizar 
+        operaciones con componentes en momentos específicos de la vida del componente en el DOM (cuando se crean, editan...)

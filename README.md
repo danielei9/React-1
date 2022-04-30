@@ -57,3 +57,146 @@ es necesario :
             setNumClicks(0);
         }; //
     */
+
+pasar texto a los componentes mediante etiqueta de cierre 
+              <Boton>1</Boton>
+recibir en componente
+            return (
+        <div>
+            {props.children}
+        </div>
+    );
+
+    Se puede hacer clases dinamicas en react y css 
+    className={`boton-contenedor ${esOperador(props.children) ? 'operador' : null}`}
+    utilizamos ${} para llamar a una funcion y en caso true se pasa operador en caso false null  // Operador ternario  ?
+para ello se define en el componente la funcion a llamar
+    
+    const esOperador = valor => {
+        return isNaN(valor) && (valor != '.') && (valor != '=');
+    }
+
+y cambiamos  
+import React from 'react';  // importante en este caso que sea mayuscula React
+
+quedando el componente tal que asi:
+import React from 'react';
+
+function Boton(props) {
+
+    const esOperador = valor => {
+        return isNaN(valor) && (valor != '.') && (valor != '=');
+    }
+    
+    return (
+        <div className={`boton-contenedor ${esOperador(props.children) ? 'operador' : ''}`.trimEnd()}> /*trimEnd borra espacios al final del string */
+            {props.children}
+        </div>
+    );
+}
+export default Boton;
+
+**se crean plantillas de css con ``    =>  EJEMPLO: `boton-contenedor ${esOperador(props.children) ? 'operador' : ''}`
+en estas se pueden implementar con codigo js mediante {} con lo que llamamos a esOperador pasandole como atributos lo que hay entre las llaves
+
+para componentes sencillos se puede usar esta semantica con tipo flecha
+
+const Pantalla = ({ input }) => (
+    <div className="input">
+        {input}
+    </div>
+);
+export default Pantalla; 
+
+Hooks
+import { useState } from 'react' ; /necesario para crear estados 
+
+// en este caso creamos un estado que el valor se refleja en input y obtenemos una fucion setter llamada setInput, input en este caso se inicializa con valor = ''
+  const [input, setInput] = useState('');
+
+Añadir un prop a un componente 
+          <Boton manejarClick={agregarInput} >1</Boton>
+
+y desde este lo podemos llamar, si lo importamos como (props) props.manejarClick o si lo importamos {manejarClick} manejarClick
+
+Manejar logica de un boton mediante onclick
+        <div 
+        className={`boton-contenedor ${esOperador(props.children) ? 'operador' : ''}`.trimEnd()}
+        onClick={() => props.manejarClick(props.children)}  // aqui le decimos que onClick llame a una funcion de js anonima que recibe de props y se llama 
+                                                            //manejarClick pasandole de parametro lo que haya dentro de props.children que es lo que hay dentro de la instancia del objeto
+        > 
+            {props.children}
+        </div>
+
+        Fragmentos para no poner un contenedor que no tiene proposito se pueden usar etiquetas en blanco como...
+        function ListaDeTareas(){
+            return(
+                <>
+
+                </>
+            )
+        }
+    A la hora de representar en una lista es necesario indicar con key el orden y que este valor sea unico. este valor no es pasado como props
+    si lo quieres como prop hay que pasarlo duplicado con otro nombre id en este caso ... key es totalmente necesario
+
+     <div className="tareas-lista-contenedor">
+        {
+            tareas.map((tarea)=>
+                <Tarea
+                key={tarea.id}
+                id={tarea.id}
+                texto={tarea.texto}
+                completada={tarea.completada}
+                />
+            )
+        }
+            </div>
+
+    Loc componentes de clase en el constructor llaman a super si tiene props tambien los recibe constructor(props) y super(props)
+    
+    class Tarea extends React.Component{
+        constructor(props){
+            super(props);
+        }
+        render(){
+            return <p>Mi Tarea  </p>;
+        }
+    }
+
+    el estado en el constructor : el objeto state se inicializa en el constructor para manejar los estaddos en el objeto js state
+
+    class Tarea extends React.Component{
+        constructor(props){
+            super(props);
+            this.state = {
+                completada:true,
+                color:red,
+                prioridad:1
+        }
+        render(){
+            return <p>Mi Tarea  </p>;
+        }
+    }
+
+    Acceder al estado mediante this.state.NombrePropiedad
+
+     this.state = {
+                completada:true,         // this.state.completada ... Para acceder a ellas
+                color:red,               // this.state.color
+                prioridad:1              // this.state.prioridad
+        }
+        por ejemplo:
+
+         render(){
+            return <p>Mi Tarea es de color {this.state.color}  </p>;
+        }
+
+        Actualizar el estado mediante this.setState({ SOLO PROPIEDADES A CAMBIAR LAS OTRAS NO SE VEN AFECTADAS}) 
+
+        this.setState({
+            completada:false,
+            color:"green"  //  prioridad no cambiar => ( prioridad:1 )
+        });
+
+        Metodos de ciclos de vida son metodos especiales de React usados para realizar 
+        operaciones con componentes en momentos específicos de la vida del componente en el DOM (cuando se crean, editan...)
