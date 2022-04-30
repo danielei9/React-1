@@ -272,6 +272,59 @@ this.setState({
 Metodos de ciclos de vida son metodos especiales de React usados para realizar 
 operaciones con componentes en momentos específicos de la vida del componente en el DOM (cuando se crean, editan...)
 
+## React Native (Conersion)
+
+Pasos a seguir
+Para convertir una app de React de web en una aplicación de React Native tienes que seguir los siguientes pasos:
+
+  1. Crear una aplicación de React Native desde cero. Para eso hay que ejecutar los comandos como «npx react-native init SampleProject» o para un proyecto de                Typescript «npx react-native init SampleProject –template react-native-template-typescript«
+  2. Quitar los ficheros css de todos los archivos. Tienes que eliminar todos los import ‘simple.css’ o require (‘simple.css’) en todos los ficheros. React Native          utiliza otro sistema de estilos.
+  3.  Convertir los componentes de React en los componentes de React Native. React Native usa sus propios componentes y tenemos que cambiar los componentes de DOM a         los componentes de React Native.
+  4. Crear los estilos para componentes. Tienes que crear los objetos StyleSheet que se utiliza en el mundo de React Native para estilizar las vistas.
+```js
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "#eaeaea"
+  },
+  title: {
+    marginTop: 16,
+    paddingVertical: 8,
+    borderWidth: 4,
+    borderColor: "#20232a",
+    borderRadius: 6,
+    backgroundColor: "#61dafb",
+    color: "#20232a",
+    textAlign: "center",
+    fontSize: 30,
+    fontWeight: "bold"
+  }
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: "#eaeaea"
+  },
+  title: {
+    marginTop: 16,
+    paddingVertical: 8,
+    borderWidth: 4,
+    borderColor: "#20232a",
+    borderRadius: 6,
+    backgroundColor: "#61dafb",
+    color: "#20232a",
+    textAlign: "center",
+    fontSize: 30,
+    fontWeight: "bold"
+  }
+});
+```
+  5. Cambiar las librerías de navegación a las de React Native. Existe la versión de React Router para React Native: React Router Native. También existen las librerías      React Navigation y React Native Navigation.
+
+Si el código de React utiliza de alguna forma la API de Node.JS (fs,os,Path etc) o utiliza los objetos como window() o history(), hay que cambiar el código según el contexto para utilizar la API de React Native.
 
 ## Construido con 🛠️
 
