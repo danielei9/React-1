@@ -279,7 +279,7 @@ this.setState({
 Metodos de ciclos de vida son metodos especiales de React usados para realizar 
 operaciones con componentes en momentos específicos de la vida del componente en el DOM (cuando se crean, editan...)
 
-## React Native (Conersion)
+## React Native (Conversion)
 
 Pasos a seguir
 Para convertir una app de React de web en una aplicación de React Native tienes que seguir los siguientes pasos:
@@ -332,7 +332,281 @@ const styles = StyleSheet.create({
   5. Cambiar las librerías de navegación a las de React Native. Existe la versión de React Router para React Native: React Router Native. También existen las librerías      React Navigation y React Native Navigation.
 
 Si el código de React utiliza de alguna forma la API de Node.JS (fs,os,Path etc) o utiliza los objetos como window() o history(), hay que cambiar el código según el contexto para utilizar la API de React Native.
+## React Native Expo Lib
+    Installing Expo CLI
+```
+npm install --global expo-cli
+```
+Initializing the project
+```
+expo init my-app-native && cd my-app-native
+```
+Starting the development server
+```
+expo start
+```
+Obtendremos un template vacío. Empezamos a tocar... Nos encontramos esto y cambiamos el Text para añadir un estilo y comprobar que es distinto al css convencional
+```js
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text style={{color: '#888', fontSize: 18}}>  //ver css
+        To share a photo from your phone with a friend, just press the button below!
+      </Text>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+```
+Añadimos una imagen importando su source, su tipo de variable de react 
 
+```js
+import { Image,  StyleSheet, Text, View } from 'react-native';
+import logo from './assets/logo.png'; 
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Image source={logo} style={{ width: 305, height: 159 }} />  //aqui está
+      <Image source={{ uri: "https://i.imgur.com/TkIrScD.png" }} style={{ width: 305, height: 159 }} /> // mediante url
+      <Text style={{color: '#888', fontSize: 18}}> 
+        To share a photo from your phone with a friend, just press the button below!
+      </Text>
+    </View>
+  );
+}
+```
+Organizamos bien el style:
+```js
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Image source={{ uri: "https://i.imgur.com/TkIrScD.png" }} style={styles.logo} />
+      <Text style={styles.instructions} >
+        To share a photo from your phone with a friend, just press the button below!
+      </Text>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 305,
+    height: 159,
+    marginBottom: 10,
+  },
+  instructions: {
+    color: '#888',
+    fontSize: 18,
+    marginHorizontal: 15,
+  }, 
+});
+```
+Creando un Boton
+```js
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Image source={{ uri: 'https://i.imgur.com/TkIrScD.png' }} style={styles.logo} />
+      <Text style={styles.instructions}>
+        To share a photo from your phone with a friend, just press the button below!
+      </Text>
+// BUTTON ==
+      <TouchableOpacity onPress={() => alert('Hello, world!')} style={styles.button}>
+        <Text style={styles.buttonText}>Pick a photo</Text>
+      </TouchableOpacity>
+    </View>
+  )}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 305,
+    height: 159,
+    marginBottom: 10,
+  },
+  instructions: {
+    color: '#888',
+    fontSize: 18,
+    marginHorizontal: 15,
+  }, 
+  button: {
+    backgroundColor: "blue",
+    padding: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#fff',
+  }, 
+});
+  );
+}
+```
+Picking an image
+Primero necesitamos cargar este modulo con:
+```bash
+ expo install expo-image-picker
+```
+```js
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'; //importamos
+export default function App() {
+     //Abrir imagenes asincrono
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+     //Pedir Permisos
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+     //Recoger el resultado
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    console.log(pickerResult);
+  }
+  
+  return (
+    <View style={styles.container}>
+      <Image source={{ uri: 'https://i.imgur.com/TkIrScD.png' }} style={styles.logo} />
+      <Text style={styles.instructions}>
+        To share a photo from your phone with a friend, just press the button below!
+      </Text>
+      <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
+        <Text style={styles.buttonText}>Pick a photo</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+```
+Interactuando con la imagen seleccionada:
+```js
+
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+export default function App() {
+  let [selectedImage, setSelectedImage] = React.useState(null);
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    if (pickerResult.cancelled === true) {
+      return;
+    }
+    setSelectedImage({ localUri: pickerResult.uri });
+  };
+  if (selectedImage !== null) { //devolvemos la imagen en una nueva vista si la imagen no es null
+    return (
+      <View style={styles.container}>
+        <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
+      </View>
+    );
+  }
+  return (
+       <View style={styles.container}>
+      <Image source={{ uri: 'https://i.imgur.com/TkIrScD.png' }} style={styles.logo} />
+      <Text style={styles.instructions}>
+        To share a photo from your phone with a friend, just press the button below!
+      </Text>
+      <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
+        <Text style={styles.buttonText}>Pick a photo</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 305,
+    height: 159,
+    marginBottom: 20,
+  },
+  instructions: {
+    color: '#888',
+    fontSize: 18,
+    marginHorizontal: 15,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  thumbnail: {
+       width: 300,
+    height: 300,
+    resizeMode: 'contain',
+  },
+});
+```
+Para compartir la imagen :
+ será necesario instalar 
+ ```
+ expo install expo-sharing
+ ```
+```js
+import * as Sharing from 'expo-sharing'; 
+// con esta funcion llamamos a compartir
+  let openShareDialogAsync = async () => {
+    if (Platform.OS === 'web') {
+      alert(`Uh oh, sharing isn't available on your platform`);
+      return;
+    }
+    await Sharing.shareAsync(selectedImage.localUri);
+  }; 
+// con esta funcion devolvemos la vista de compartir
+  if (selectedImage !== null) {
+    return (
+      <View style={styles.container}>
+        <Image source={{ uri: selectedImage.localUri }} style={styles.thumbnail} />
+        <TouchableOpacity onPress={openShareDialogAsync} style={styles.button}>
+          <Text style={styles.buttonText}>Share this photo</Text>
+        </TouchableOpacity>
+        </View>
+    );
+  }
+...
+```
+Configurar pantalla de inicio como splas.png buscar este archivo en assets y sustituir cambiar el color en 
+ app.json desde el directorio de su proyecto en su editor de código y realice el siguiente cambio en la splashsección:
+ ```js
+  "splash": {
+  "image": "./assets/splash.png",
+  "resizeMode": "contain",
+  "backgroundColor": "#000000"
+},
+```
 ## Construido con 🛠️
 
 
