@@ -18,8 +18,8 @@ _Cada carpeta dentro del repositorio indica un proyecto en react_
 <img src="./docs/4.PNG"  height="300" />
 
 ### Proyecto 5 - ShareImages App (react Native Android App)
-<img src="./docs/5.PNG"  height="300" />
 <img src="./docs/6.PNG"  height="300" />
+<img src="./docs/5.PNG"  height="300" />
 
 **Crear app** _ (llamada mi-app)_:
 ``` 
