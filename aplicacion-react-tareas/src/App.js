@@ -1,6 +1,5 @@
 import './App.css';
 import Logo from './componentes/Logo'
-import Tarea from './componentes/Tarea'
 import ListaDeTareas from './componentes/ListaDeTareas'
 import logo from './logo.svg';
 
